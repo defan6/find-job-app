@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: gateway-service-ms
+  cloud:
+    gateway:
+      routes:          # ? ?????? ???? ??????? routes!
+        - id: company-service-ms
+          uri: lb://company-service-ms
+          predicates:
+            - Path=/companies/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: job-service-ms
+          uri: lb://job-service-ms
+          predicates:
+            - Path=/jobs/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: review-service-ms
+          uri: lb://review-service-ms
+          predicates:
+            - Path=/reviews/**
+          filters:
+            - name: JwtAuthenticationFilter
+        - id: user-service-ms
+          uri: lb://user-service-ms
+          predicates:
+            - Path=/auth/**
+  config:
+    import: optional:configserver:http://localhost:8888
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    my.ddos.Gateway: INFO  # ? ?????? ??? ??????!
+    my.ddos.Gateway.config: INFO  # ? ? ???!
+    reactor.netty: DEBUG
+server:
+  port: 7777
+
+jwt:
+  secret: 76fda2e1d5b2f21d82b61b8732b85b7876fda2e1d5b2f21d82b61b8732b85b7876fda2e1d5b2f21d82b61b8732b85b78
+  expiration: 86400000
